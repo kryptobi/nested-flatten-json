@@ -1,6 +1,6 @@
 using System.Globalization;
 
-namespace jsonflattennested;
+namespace JsonFlattenNested;
 
 public interface IJsonKeyValueProvider
 {

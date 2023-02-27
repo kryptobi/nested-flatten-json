@@ -1,7 +1,7 @@
 using System.Globalization;
 using Newtonsoft.Json.Linq;
 
-namespace jsonflattennested;
+namespace JsonFlattenNested;
 
 public class JsonKeyValueProvider : IJsonKeyValueProvider
 {

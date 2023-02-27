@@ -1,20 +1,17 @@
-﻿using System.Globalization;
-using FluentAssertions;
-using Newtonsoft.Json.Linq;
+﻿using FluentAssertions;
 using Xunit;
-using System.IO;
 
-namespace jsonflattennested;
+namespace JsonFlattenNested.Tests;
 
 public class FlattenJsonTest
 {
-    private readonly string JsonString;
+    private readonly string _jsonString;
     private readonly IJsonKeyValueProvider _jsonKeyValueProvider;
 
     public FlattenJsonTest()
     {
         _jsonKeyValueProvider = new JsonKeyValueProvider();
-        JsonString =  """
+        _jsonString = """
 {
      "name": "John",
      "address":{
@@ -23,20 +20,21 @@ public class FlattenJsonTest
      }
 }
 """;
+
     }
 
     [Fact]
-    public void flatThatJsonString()
+    public void FlatThatJsonString()
     {
-        var flattedJsonDict = _jsonKeyValueProvider.FlatNestedJson(JsonString);
+        var flattedJsonDict = _jsonKeyValueProvider.FlatNestedJson(_jsonString);
         flattedJsonDict.TryGetValue("address.city", out var value);
 
         value.Should().NotBeNull();
         value.Should().Be("Lisbon");
     }
-    
+
     [Fact]
-    public async Task flatThatJsonStringInFile()
+    public async Task FlatThatJsonStringInFileAsync()
     {
         var filePath = Path.Combine(Directory.GetCurrentDirectory(), "File.json");
         var flattedJsonDict = await _jsonKeyValueProvider.FlatNestedJsonByJsonFile(filePath);
