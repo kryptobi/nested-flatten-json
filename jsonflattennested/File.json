@@ -1,0 +1,7 @@
+{
+  "name": "John",
+  "address": {
+    "city": "Lisbon",
+    "street": "Central street"
+  }
+}
