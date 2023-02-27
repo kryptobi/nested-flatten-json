@@ -9,9 +9,11 @@ namespace jsonflattennested;
 public class FlattenJsonTest
 {
     private readonly string JsonString;
+    private readonly IJsonKeyValueProvider _jsonKeyValueProvider;
 
     public FlattenJsonTest()
     {
+        _jsonKeyValueProvider = new JsonKeyValueProvider();
         JsonString =  """
 {
      "name": "John",
@@ -26,7 +28,7 @@ public class FlattenJsonTest
     [Fact]
     public void flatThatJsonString()
     {
-        var flattedJsonDict = FlatNestedJson(JsonString);
+        var flattedJsonDict = _jsonKeyValueProvider.FlatNestedJson(JsonString);
         flattedJsonDict.TryGetValue("address.city", out var value);
 
         value.Should().NotBeNull();
@@ -37,19 +39,10 @@ public class FlattenJsonTest
     public async Task flatThatJsonStringInFile()
     {
         var filePath = Path.Combine(Directory.GetCurrentDirectory(), "File.json");
-        var readJson = await File.ReadAllTextAsync(filePath);
-        var flattedJsonDict = FlatNestedJson(readJson);
+        var flattedJsonDict = await _jsonKeyValueProvider.FlatNestedJsonByJsonFile(filePath);
         flattedJsonDict.TryGetValue("address.city", out var value);
 
         value.Should().NotBeNull();
         value.Should().Be("Lisbon");
-    }
-
-    private Dictionary<string, string> FlatNestedJson(string json)
-    {
-        return  JObject.Parse(json)
-                       .Descendants()
-                       .OfType<JValue>()
-                       .ToDictionary(jv => jv.Path, jv => jv.ToString(CultureInfo.InvariantCulture));
     }
 }
